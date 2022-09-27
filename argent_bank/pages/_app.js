@@ -12,12 +12,3 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default MyApp
-
-// function MyApp({ Component, pageProps }) {
-//   return (
-//   <Provider store={store}>
-//     <Component {...pageProps} />
-//   </Provider>
-//   )
-// }
-

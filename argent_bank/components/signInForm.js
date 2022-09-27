@@ -1,24 +1,40 @@
 import styles from '../styles/SignInForm.module.css'
-import Link from 'next/link'
 import { useState } from 'react'
-import {useDispatch} from 'react-redux'
-import { login } from '../features/userSlice'
+import { useRouter } from 'next/router'
+import { useDispatch } from 'react-redux'
+import { displayUser, updateToken } from '../features/userSlice'
+import axios from 'axios'
+import {getUserLogin} from '../pages/api/login'
 
-export default function SignInForm() {
+
+export default function SignInForm(userId) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    console.log(username)
-
+ 
+    const router = useRouter()
     const dispatch = useDispatch()
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
-        dispatch(login({
-            username:username,
-            password:password,
-            loggedIn:true
-        }))
+        getUserLogin({
+            email:username,
+            password:password
+        })    
+        .then(response => {
+            const token = response.data.body.token
+            dispatch(updateToken({token}))
+            axios.get( 
+                'http://localhost:3002/api/v1/user/profile', {
+                    headers: { Authorization: `Bearer ${token}`}
+                }
+            )
+            .then(response => {
+                console.log(response)
+                const id = response.data.body.id
+                router.push('user/' + id)
+                dispatch(displayUser(response.data.body))
+            })
+        })
     }
 
     return(
@@ -36,8 +52,7 @@ export default function SignInForm() {
                     <input type="checkbox" id="remember-me" /><label for="remember-me"
                     >Remember me</label>
                 </div>
-                <Link href="/user" className={styles.button}>Sign In</Link>
-                <button className={styles.button}>Sign In</button>
+                <button href={userId}className={styles.button}>Sign In</button>
             </form>
         </section>
         </>

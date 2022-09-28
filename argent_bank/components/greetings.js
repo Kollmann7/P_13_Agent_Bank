@@ -1,8 +1,9 @@
 import styles from '../styles/Greetings.module.css'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selecedtUser, displayUser } from '../features/userSlice'
+import { updateUserProfile , getUserProfile} from '../pages/api/login'
 
 export default function Greetings () {
     const [editFormIsOpen, setEditFormIsOpen] = useState(false)
@@ -12,24 +13,22 @@ export default function Greetings () {
     const dispatch = useDispatch()
     const user = useSelector(selecedtUser)
     const token = user.token
-    console.log(token)
 
     const handleUpdate = (e) => {
         e.preventDefault()
-        axios.get( 
-            'http://localhost:3002/api/v1/user/profile', {
-                token : token,
-                firstName: newFirstName,
-                lastName: newLastName
-            }
-            .then(response => {
-                console.log(response)
-                const firstName = response.firstName
-                const lastName = response.lastName
-                dispatch(displayUser({firstName, lastName}))
-                handleEdit()
+        updateUserProfile({
+            token : token,
+            firstName : newFirstName,
+            lastName : newLastName
+        }).then(() => {
+            getUserProfile({token : token}).then((response) =>{
+            console.log(response)
+            const firstName = newFirstName
+            const lastName = newLastName
+            dispatch(displayUser({firstName, lastName}))
             })
-        ) 
+        handleEdit()
+        })
     }
 
     const handleEdit = () => {

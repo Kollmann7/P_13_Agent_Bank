@@ -12,4 +12,9 @@
     font-weight: bold;
     padding: 10px;
 }  
-  
+.buttonWrapper{
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}

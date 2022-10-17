@@ -31,4 +31,5 @@
 .button{
     border-style : none;
     background-color : white;
+    cursor: pointer;
 }

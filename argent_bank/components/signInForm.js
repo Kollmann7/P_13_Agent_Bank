@@ -2,7 +2,7 @@ import styles from '../styles/SignInForm.module.css'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
-import { displayUser, updateToken } from '../features/userSlice'
+import { setUser, setToken } from '../features/userSlice'
 import axios from 'axios'
 import {getUserLogin} from '../pages/api/login'
 
@@ -14,27 +14,35 @@ export default function SignInForm(userId) {
     const router = useRouter()
     const dispatch = useDispatch()
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        getUserLogin({
+    const getUserProfile = (token) => {
+        return axios.get( 
+            'http://localhost:3002/api/v1/user/profile', {
+                headers: { Authorization: `Bearer ${token}`}
+            }
+        )
+        .then(response => {
+            console.log(response)
+            const id = response.data.body.id
+            router.push('user/' + id)
+            dispatch(setUser(response.data.body))
+            console.log(response.data.body)
+        })
+    }
+    const login = () => {
+        return getUserLogin({
             email:username,
             password:password
         })    
         .then(response => {
             const token = response.data.body.token
-            dispatch(updateToken({token}))
-            axios.get( 
-                'http://localhost:3002/api/v1/user/profile', {
-                    headers: { Authorization: `Bearer ${token}`}
-                }
-            )
-            .then(response => {
-                console.log(response)
-                const id = response.data.body.id
-                router.push('user/' + id)
-                dispatch(displayUser(response.data.body))
-            })
+            console.log(token)
+            dispatch(setToken({token}))
+            return token
         })
+    }
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        login().then(getUserProfile)
     }
 
     return(
@@ -43,10 +51,10 @@ export default function SignInForm(userId) {
             <h1>Sign In</h1>
             <form onSubmit={(e) => handleSubmit(e)}>
                 <div className={styles.wrapper}>
-                    <label for="username">Username</label><input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    <label htmlFor="username">Username</label><input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
                 </div>
                 <div className={styles.wrapper}>
-                    <label for="password">Password</label><input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <label htmlFor="password">Password</label><input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <div className={styles.remember}>
                     <input type="checkbox" id="remember-me" /><label for="remember-me"

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 export const getUserLogin = ({ email, password}) => {
   return axios
     .post('http://localhost:3002/api/v1/user/login',{
@@ -14,8 +15,8 @@ export const getUserProfile = ({token}) => {
     headers: { Authorization: `Bearer` + token },
   }
   return axios
-    .get('http://localhost:3002/api/v1/user/profile', config)
-    .then((response) => {
+  .get('http://localhost:3002/api/v1/user/profile', config)
+  .then((response) => {
       const firstName = firstName
       const lastName = lastName
       console.log(response)

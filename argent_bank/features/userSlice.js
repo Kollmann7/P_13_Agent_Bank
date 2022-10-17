@@ -1,5 +1,5 @@
 import {  createSlice } from '@reduxjs/toolkit'
-
+import { setCookie, deleteCookie } from 'cookies-next'
 
 export const userSlice = createSlice({
     name:"user",
@@ -8,24 +8,28 @@ export const userSlice = createSlice({
         password:'',
         firstName:'',
         lastName:'',
+        id:'',
         token:null,
     },
     reducers:{
-        updateToken(state, action) {
+        setToken(state, action) {
             state.token = action.payload.token
+            setCookie('token', action.payload.token)
         },
-        displayUser(state, action){
+        setUser(state, action){
             state.firstName = action.payload.firstName
             state.lastName = action.payload.lastName
+            state.email = action.payload.email
+            state.id = action.payload.id
         },
-        logout(state){
+        removeToken(state){
             state.token = null
-            localStorage.removeItem('token')
+            deleteCookie('token')
         }
     }
 })
 
-export const {updateToken, displayUser, logout} = userSlice.actions
+export const {setToken, setUser, removeToken} = userSlice.actions
 
 export const  selecedtUser = (state) => state.user
 

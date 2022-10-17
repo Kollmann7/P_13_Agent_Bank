@@ -1,5 +1,5 @@
 import {  createSlice } from '@reduxjs/toolkit'
-import { setCookie, deleteCookie } from 'cookies-next'
+import { getCookie, setCookie, deleteCookie } from 'cookies-next'
 
 export const userSlice = createSlice({
     name:"user",
@@ -21,6 +21,7 @@ export const userSlice = createSlice({
             state.lastName = action.payload.lastName
             state.email = action.payload.email
             state.id = action.payload.id
+            state.token = getCookie('token')
         },
         removeToken(state){
             state.token = null

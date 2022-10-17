@@ -21,11 +21,9 @@ export default function SignInForm(userId) {
             }
         )
         .then(response => {
-            console.log(response)
             const id = response.data.body.id
             router.push('user/' + id)
             dispatch(setUser(response.data.body))
-            console.log(response.data.body)
         })
     }
     const login = () => {
@@ -35,7 +33,6 @@ export default function SignInForm(userId) {
         })    
         .then(response => {
             const token = response.data.body.token
-            console.log(token)
             dispatch(setToken({token}))
             return token
         })

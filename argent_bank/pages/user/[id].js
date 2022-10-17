@@ -7,14 +7,14 @@ import Account from '../../components/account'
 import { useDispatch, useSelector } from 'react-redux'
 import { selecedtUser } from '../../features/userSlice'
 import { setUser } from '../../features/userSlice'
+import { setToken } from '../../features/userSlice'
+import { useEffect } from 'react'
 import api from '../api/api'
 
 
 export default function User ({data}){
-    useSelector(selecedtUser)
     const dispatch = useDispatch()
     dispatch(setUser(data.body))
-
     return (
         <>
             <Head>

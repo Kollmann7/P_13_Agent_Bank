@@ -9,7 +9,6 @@ export default function SignOut () {
     const user = useSelector(selecedtUser)
     const dispatch = useDispatch()
     const router = useRouter()
-    console.log(router.pathname)
     
     const profilePage = () => {
         const id = user.id

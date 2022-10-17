@@ -1,24 +1,33 @@
 import Link from 'next/link'
 import styles from '../styles/Header.module.css'
 import { useSelector, useDispatch } from "react-redux"
-import { logout , selecedtUser} from '../features/userSlice'
+import { removeToken , selecedtUser} from '../features/userSlice'
+import { useRouter } from 'next/router'
+
 
 export default function SignOut () {
     const user = useSelector(selecedtUser)
     const dispatch = useDispatch()
+    const router = useRouter()
+    console.log(router.pathname)
+    
+    const profilePage = () => {
+        const id = user.id
+        router.push( router.pathname === '/user/' ? router.pathname + id : '/user/' + id)
+    }
 
     const handleLogout = () => {
-        dispatch(logout())
+        dispatch(removeToken())
     }
     return(
         <>
         <div className={styles.user}>
-            <Link className={styles.item} href="/user">
+            <button className={styles.button} onClick={profilePage}>
                 <div>
                     {user.firstName}
                 </div>
-            </Link>
-            <Link className={styles.item} href="/" >
+            </button>
+            <Link href={'/'}>
                 <button className={styles.button} onClick={handleLogout}>
                     Sign Out
                 </button>

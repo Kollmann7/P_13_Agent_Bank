@@ -6,8 +6,15 @@ import styles from '../styles/Home.module.css'
 import Footer from '../components/footer'
 import SignOutHeader from '../components/signOutHeader'
 import api from './api/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { setUser, selecedtUser } from '../features/userSlice'
 
 export default function Home({data}) {
+  const dispatch = useDispatch()
+  const user = useSelector(selecedtUser)
+  if (!user.id && data){
+    dispatch(setUser(data.body))
+  }
   return (
     <>
       <Head>
@@ -33,13 +40,19 @@ export default function Home({data}) {
 }
 export async function getServerSideProps({req, res}) {
   const token = req.cookies.token
-  api.defaults.headers.Authorization = `Bearer ${token}`
-  let {data} =  {}
+  if (!token) {
+    return {props:{}}
+  }
   
-  if(!!token){
-    ({data} =  await api.get('/user/profile'))
+  api.defaults.headers.Authorization = `Bearer ${token}`
+  
+  try{
+    const { data } = await api.get('/user/profile')
+    return {
+      props: { data },
+    }
+  }catch (e){
+    return { props: {} }
   }
-  return {
-    props:{ data : !!token ? data : null }
-  }
+
 }

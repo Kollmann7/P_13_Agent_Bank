@@ -7,45 +7,50 @@ import Account from '../../components/account'
 import { useDispatch, useSelector } from 'react-redux'
 import { selecedtUser } from '../../features/userSlice'
 import { setUser } from '../../features/userSlice'
-import { setToken } from '../../features/userSlice'
-import { useEffect } from 'react'
 import api from '../api/api'
 
 
-export default function User ({data}){
-    const dispatch = useDispatch()
+export default function User({ data }) {
+  const dispatch = useDispatch()
+  const user = useSelector(selecedtUser)
+  console.log('user',user)
+  if (!user.id && data) {
     dispatch(setUser(data.body))
-    return (
-        <>
-            <Head>
-                <title>Argent Bank</title>
-            </Head>
-            <SignOutHeader />
-            <main className={styles.dark}>
-                <Greetings />
-                <Account />
-            </main>
-            <Footer />
-        </>
-    )
+  }
+  return (
+    <>
+      <Head>
+        <title>Argent Bank</title>
+      </Head>
+      <SignOutHeader />
+      <main className={styles.dark}>
+        <Greetings />
+        <Account />
+      </main>
+      <Footer />
+    </>
+  )
 }
-export async function getServerSideProps({req, res}) {
-    const token = req.cookies.token
-    api.defaults.headers.Authorization = `Bearer ${token}`
-    let {data} =  {}
-    if(!!token){
-      ({data} =  await api.get('/user/profile'))
-    }
-
-    if(token === undefined){
-        return {
-            redirect:{
-            destination: '/',
-            }
-        }
-    }
-
+export async function getServerSideProps({ req, res }) {
+  const token = req.cookies.token
+  if (!token) {
     return {
-      props:{ data : !!token ? data : null }
+      redirect: {
+        destination: '/',
+      }
     }
+  }
+  api.defaults.headers.Authorization = `Bearer ${token}`
+  try {
+    const { data } = await api.get('/user/profile')
+    return {
+      props: { data },
+    }
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/',
+      }
+    }
+  }
 }

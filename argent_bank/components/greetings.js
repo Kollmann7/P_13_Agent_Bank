@@ -10,19 +10,23 @@ export default function Greetings () {
     const [newLastName, setNewLastName] = useState('')
     const dispatch = useDispatch()
     const user = useSelector(selecedtUser)
+    console.log(user)
     const token = user.token
     
-    const handleUpdate = () => {
+    const handleUpdate = (e) => {
+        e.preventDefault()
         updateUserProfile({
             token : token,
             firstName : newFirstName,
-            lastName : newLastName
+            lastName : newLastName,
         }).then(() => {
             dispatch(setToken({token}))
             getUserProfile({token : token}).then(() =>{
                 const firstName = newFirstName
                 const lastName = newLastName
-                dispatch(setUser({firstName, lastName}))
+                const email = user.email
+                const id = user.id
+                dispatch(setUser({firstName, lastName, email, id}))
             })
         handleEdit()
         })

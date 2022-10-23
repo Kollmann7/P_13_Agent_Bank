@@ -40,9 +40,8 @@ export default function SignInForm(userId) {
     }
     const handleSubmit = (e) => {
         e.preventDefault()
-        login().then(getUserProfile)
-            .catch(err => {
-            setError(err.response.data.message)
+        login().then(getUserProfile).catch(err => {
+          setError(err.response.data.message)
         })
     }
 

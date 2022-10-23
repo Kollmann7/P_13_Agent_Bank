@@ -7,7 +7,6 @@ export const getUserLogin = ({ email, password}) => {
       email,
       password
     })
-    .catch((error) => console.log(error))
 }
 
 export const getUserProfile = ({token}) => {
@@ -21,7 +20,6 @@ export const getUserProfile = ({token}) => {
       const lastName = lastName
       console.log(response)
     })
-    .catch((error) => console.log(error))
 }
 
 export const updateUserProfile = ({ token, firstName, lastName }) => {
@@ -37,5 +35,4 @@ export const updateUserProfile = ({ token, firstName, lastName }) => {
   return axios
     .put('http://localhost:3002/api/v1/user/profile', userData, config)
     .then((response) => console.log(response))
-    .catch((error) => console.log(error))
 }

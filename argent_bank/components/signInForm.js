@@ -10,6 +10,7 @@ import {getUserLogin} from '../pages/api/login'
 export default function SignInForm(userId) {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState(null)
  
     const router = useRouter()
     const dispatch = useDispatch()
@@ -40,6 +41,9 @@ export default function SignInForm(userId) {
     const handleSubmit = (e) => {
         e.preventDefault()
         login().then(getUserProfile)
+            .catch(err => {
+            setError(err.response.data.message)
+        })
     }
 
     return(
@@ -53,13 +57,15 @@ export default function SignInForm(userId) {
                 <div className={styles.wrapper}>
                     <label htmlFor="password">Password</label><input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                <div className={styles.remember}>
-                    <input type="checkbox" id="remember-me" /><label for="remember-me"
-                    >Remember me</label>
-                </div>
+                {error && (
+                    <>
+                        <div className={styles.error}> {error} </div>
+                    </>
+                )}
                 <button href={userId}className={styles.button}>Sign In</button>
             </form>
         </section>
         </>
+        
     )
 }

@@ -6,6 +6,23 @@ info:
   termsOfService: 'http://swagger.io/terms/'
 host: localhost:3001
 basePath: /api/v1
+parameters:
+    offsetParam:
+      in: query
+      name: offset
+      required: false
+      type: integer
+      minimum: 0
+      description: The number of items to skip before starting to collect the result set.
+    limitParam:
+      in: query
+      name: limit
+      required: false
+      type: integer
+      minimum: 1
+      maximum: 50
+      default: 30
+      description: The numbers of items to return.
 schemes:
   - http
 paths:
@@ -67,6 +84,7 @@ paths:
       description: API for fetching a user profile
       parameters:
         - in: header
+          type: string
           name: Authorization
           description: Attach Bearer JWT token
           required: true
@@ -90,6 +108,7 @@ paths:
       description: API for updating a user profile
       parameters:
         - in: header
+          type: string
           name: Authorization
           description: Attach Bearer JWT token
           required: true
@@ -110,40 +129,67 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/transactions:
+  /user/{userId}/transactions:
       get:
         security:
           - Bearer: []
         tags:
-          - User Module
+          - Transactions
         summary: User transactions API
         description: API for get transactions 
         parameters:
+          - in: path
+            name: userId
+            type: number
+            required: true
+            description: Numeric ID of the user to get transaction
           - in: header
+            type: integer
             name: Authorization
             description: Attach Bearer JWT token
             required: true
+          - $ref: '#/parameters/offsetParam'
+          - $ref: '#/parameters/limitParam'
         produces:
           - application/json
         responses:
           '200':
             description: Transactions retrieved successully
             schema:
-              $ref: '#/definitions/TransactionsResponse'
+              type: array
+              items:
+                $ref: '#/definitions/TransactionsResponse'
           '400':
             description: Invalid Fields
+          '401':
+            description: Unauthorized token
+          '403':
+            description: Forbidden
+          '404':
+            description: Not Found
           '500':
             description: Internal Server Error
-  /user/transactions/transaction:
+  /user/{userId}/transactions/{transactionId}:
       get:
         security:
           - Bearer: []
         tags:
-          - User Module
+          - Transactions
         summary: User transaction details API
         description: API for get transactions details
         parameters:
+          - in: path
+            name: userId
+            type: number
+            required: true
+            description: Numeric ID of the user to get transaction
+          - in: path
+            name: transactionId
+            type: number
+            required: true
+            description: Numeric ID of the transaction to get a transaction
           - in: header
+            type: number
             name: Authorization
             description: Attach Bearer JWT token
             required: true
@@ -153,20 +199,37 @@ paths:
           '200':
             description: Transaction retrieved successully
             schema:
-              $ref: '#/definitions/TransactionResponse'
+              $ref: '#/definitions/TransactionsResponse'
           '400':
             description: Invalid Fields
+          '401':
+            description: Unauthorized token
+          '403':
+            description: Forbidden
+          '404':
+            description: Not Found
           '500':
             description: Internal Server Error
       put:
         security:
           - Bearer: []
         tags:
-          - User Module
+          - Transactions
         summary: User transaction details API
         description: API for get transactions details
         parameters:
+          - in: path
+            name: userId
+            type: number
+            required: true
+            description: Numeric ID of the user to get transaction
+          - in: path
+            name: transactionId
+            type: number
+            required: true
+            description: Numeric ID of the transaction to get a transaction
           - in: header
+            type: number
             name: Authorization
             description: Attach Bearer JWT token
             required: true
@@ -179,9 +242,14 @@ paths:
               $ref: '#/definitions/TransactionResponse'
           '400':
             description: Invalid Fields
+          '401':
+            description: Unauthorized token
+          '403':
+            description: Forbidden
+          '404':
+            description: Not Found
           '500':
             description: Internal Server Error
-        
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -240,6 +308,20 @@ definitions:
     type: object
     properties:
       id:
+        type: string
+      date: 
+        type: string
+      label: 
+        type: string
+      amount: 
+        type: number
+      balance: 
+        type: number
+      category: 
+        type: string
+      notes: 
+        type: string
+      transaction type:
         type: string
   TransactionResponse:
     type: object

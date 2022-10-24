@@ -7,7 +7,7 @@ info:
 host: localhost:3001
 basePath: /api/v1
 parameters:
-    offsetParam:
+    offsetParam:  # <-- Arbitrary name for the definition that will be used to refer to it.
       in: query
       name: offset
       required: false
@@ -233,6 +233,12 @@ paths:
             name: Authorization
             description: Attach Bearer JWT token
             required: true
+          - in: body
+            name: Request Body
+            description: Update an existent user in the store
+            required: true
+            schema:
+              $ref: '#/definitions/TransactionResponse'
         produces:
           - application/json
         responses:

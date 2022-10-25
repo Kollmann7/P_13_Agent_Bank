@@ -17,7 +17,7 @@ export default function SignInForm(userId) {
 
     const getUserProfile = (token) => {
         return axios.get( 
-            'http://localhost:3002/api/v1/user/profile', {
+            'http://localhost:3001/api/v1/user/profile', {
                 headers: { Authorization: `Bearer ${token}`}
             }
         )

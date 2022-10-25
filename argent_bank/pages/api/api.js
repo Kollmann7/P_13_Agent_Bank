@@ -1,7 +1,7 @@
 // api.js
 import Axios from "axios"
 
-let url = 'http://localhost:3002/api/v1/'
+let url = 'http://localhost:3001/api/v1/'
 const api = Axios.create({
     baseURL: url,
     headers: {

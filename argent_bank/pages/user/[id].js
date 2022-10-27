@@ -14,7 +14,7 @@ export default function User({ data }) {
   const dispatch = useDispatch()
   const user = useSelector(selecedtUser)
   console.log('user',user)
-  if (!user.id && data) {
+  if (!user.token && data) {
     dispatch(setUser(data.body))
   }
   return (

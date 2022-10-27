@@ -12,7 +12,7 @@ import { setUser, selecedtUser } from '../features/userSlice'
 export default function Home({data}) {
   const dispatch = useDispatch()
   const user = useSelector(selecedtUser)
-  if (!user.id && data){
+  if (!user.token && data){
     dispatch(setUser(data.body))
   }
   return (

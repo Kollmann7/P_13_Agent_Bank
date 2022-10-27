@@ -129,7 +129,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
-  /user/{userId}/transactions:
+  /transactions:
       get:
         security:
           - Bearer: []
@@ -138,7 +138,7 @@ paths:
         summary: User transactions API
         description: API for get transactions 
         parameters:
-          - in: path
+          - in: query
             name: userId
             type: number
             required: true
@@ -156,20 +156,26 @@ paths:
           '200':
             description: Transactions retrieved successully
             schema:
-              type: array
-              items:
-                $ref: '#/definitions/TransactionsResponse'
+              type: object
+              properties:
+                total: { type: number }
+                page: { type: number }
+                per_page: { type: number }
+                has_next: { type: boolean }
+                has_prev: { type: boolean }
+                results: 
+                  type: array
+                  items:
+                    $ref: '#/definitions/TransactionsResponse'
           '400':
             description: Invalid Fields
           '401':
             description: Unauthorized token
           '403':
             description: Forbidden
-          '404':
-            description: Not Found
           '500':
             description: Internal Server Error
-  /user/{userId}/transactions/{transactionId}:
+  /transactions/{transactionId}:
       get:
         security:
           - Bearer: []
@@ -178,11 +184,6 @@ paths:
         summary: User transaction details API
         description: API for get transactions details
         parameters:
-          - in: path
-            name: userId
-            type: number
-            required: true
-            description: Numeric ID of the user to get transaction
           - in: path
             name: transactionId
             type: number
@@ -219,11 +220,6 @@ paths:
         description: API for get transactions details
         parameters:
           - in: path
-            name: userId
-            type: number
-            required: true
-            description: Numeric ID of the user to get transaction
-          - in: path
             name: transactionId
             type: number
             required: true
@@ -238,14 +234,14 @@ paths:
             description: Update an existent user in the store
             required: true
             schema:
-              $ref: '#/definitions/TransactionResponse'
+              $ref: '#/definitions/TransactionsResponse'
         produces:
           - application/json
         responses:
           '200':
             description: Transaction retrieved successully
             schema:
-              $ref: '#/definitions/TransactionResponse'
+              $ref: '#/definitions/TransactionsResponse'
           '400':
             description: Invalid Fields
           '401':
@@ -329,21 +325,3 @@ definitions:
         type: string
       transaction type:
         type: string
-  TransactionResponse:
-    type: object
-    properties:
-      date: 
-        type: string
-      label: 
-        type: string
-      amount: 
-        type: number
-      balance: 
-        type: number
-      category: 
-        type: string
-      notes: 
-        type: string
-      transaction type:
-        type: string
-      
